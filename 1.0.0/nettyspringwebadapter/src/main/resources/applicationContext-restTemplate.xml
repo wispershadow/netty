@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<import resource="applicationContextClient.xml"/>
+	<bean id="nettyClientHttpRequestFactory" class="org.wispersd.commplatform.infra.http.client.adapter.NettyClientHttpRequestFactory" destroy-method="stop">
+		<property name="sslContextFactory" ref="nettyClientSslContextFactory"/>
+		<property name="channelOptions">
+			<map></map>
+		</property>
+		<property name="getRequestConverter" ref="getRequestConverter"/>
+		<property name="postRequestConverter" ref="postRequestConverter"/>
+	</bean>
+	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		 <constructor-arg index="0" type="org.springframework.http.client.ClientHttpRequestFactory" ref="nettyClientHttpRequestFactory"></constructor-arg>  
+	</bean>
+	
+    
+    <bean id="registerJsonConverterPostProcessor" class="org.wispersd.commplatform.infra.http.client.adapter.RegisterJsonConverterPostProcessor"/>
+    
+</beans>	   

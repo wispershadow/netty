@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="nettyHttpServer" class="org.wispersd.commplatform.infra.http.server.NettyHttpServer"  init-method="start" destroy-method="stop">
+		<property name="serverInitializer" ref="nettyHttpServerInitializer"/>
+		<property name="port" value="8443" />
+	</bean>
+	
+	<bean id="reqHeaderReversePopulator" class="org.wispersd.commplatform.infra.http.client.converters.ReqHeaderReversePopulator">
+	</bean>
+	
+	<bean id="reqParamReversePopulator" class="org.wispersd.commplatform.infra.http.client.converters.ReqParamReversePopulator">
+	</bean>
+	
+	<bean id="requestReverseConverter" class="org.wispersd.commplatform.infra.http.client.converters.RequestReverseConverter">
+		<property name="reqHeaderReversePopulator" ref="reqHeaderReversePopulator"></property>
+		<property name="reqParamReversePopulator" ref="reqParamReversePopulator"></property>
+	</bean>	
+	
+	<bean id="getRequestProcessor" class="org.wispersd.commplatform.infra.http.server.GetRequestProcessor">
+		<property name="requestReverseConverter" ref="requestReverseConverter"/>
+	</bean>
+	
+	<bean id="postRequestContentProcessor" class="org.wispersd.commplatform.infra.http.server.PostRequestContentProcessor">
+		<property name="requestReverseConverter" ref="requestReverseConverter"/>
+	</bean>
+	
+	<bean id="postRequestPartsProcessor" class="org.wispersd.commplatform.infra.http.server.PostRequestPartsProcessor">
+		<property name="requestReverseConverter" ref="requestReverseConverter"/>
+	</bean>
+	
+	<bean id="requestProcessorFactory" class="org.wispersd.commplatform.infra.http.server.RequestProcessorFactory">
+		<property name="requestProcessors">
+			<map>
+				<entry key="GET|*"><ref bean="getRequestProcessor"/></entry>
+				<entry key="POST|application/xml,application/json"><ref bean="postRequestContentProcessor"/></entry>
+				<entry key="POST|application/x-www-form-urlencoded,multipart/form-data,application/x-zip-compressed"><ref bean="postRequestPartsProcessor"/></entry>
+			</map>
+		</property>
+	</bean>
+	
+	
+	<bean id="nettyServerSslContextFactory" class="org.wispersd.commplatform.infra.http.server.NettyServerSslContextFactory">
+		<property name="useSsl" value="true"/>
+	</bean>
+	
+
+	<!--  
+	<bean id="nettyHttpServerInitializer" class="org.wispersd.commplatform.infra.http.server.NettyHttpServerInitializer">
+		<constructor-arg index="0" ref="nettyServerSslContextFactory"/>
+		<constructor-arg index="1" ref="requestProcessorFactory"/>
+		<constructor-arg index="2" ref="defaultRequestDispatcher"/>
+	</bean>
+	-->
+</beans>
+
+
+

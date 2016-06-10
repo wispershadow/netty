@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="fastJsonConfig" class="com.alibaba.fastjson.support.config.FastJsonConfig">
+		<property name="charset" value="UTF-8" />
+		<property name="dateFormat" value="yyyy-MM-dd HH:mm:ss" />
+		<property name="features">
+        	<list>
+        	</list>
+        </property>
+        <property name="serializerFeatures">
+        	<list>
+        	</list>
+    	</property>
+    	<property name="serializeFilters">
+        	<list>
+        	</list>
+    	</property>
+    	<property name="classSerializeFilters">
+        	<map>
+       		</map>
+    	</property>
+	</bean>
+	
+	
+	<bean id="fastJsonMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">    
+        <property name="supportedMediaTypes">
+           <list>
+               <value>application/json</value>
+           </list>
+         </property>   
+         <property name="fastJsonConfig" ref="fastJsonConfig" />
+    </bean>
+</beans>	

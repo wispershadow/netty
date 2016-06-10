@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="sequence" class="java.util.concurrent.atomic.AtomicLong"></bean>
+	<bean id="reqHeaderPopulator" class="org.wispersd.commplatform.infra.http.client.converters.ReqHeaderPopulator">
+	</bean>
+	
+	<bean id="getRequestConverter" class="org.wispersd.commplatform.infra.http.client.converters.GetRequestConverter">
+		<property name="sequence" ref="sequence"/>
+		<property name="headerPopulator" ref="reqHeaderPopulator"/>
+	</bean>
+	
+	<bean id="postContentConverter" class="org.wispersd.commplatform.infra.http.client.converters.PostContentConverter">
+	</bean>
+	
+	<bean id="postRequestConverter" class="org.wispersd.commplatform.infra.http.client.converters.PostRequestConverter">
+		<property name="sequence" ref="sequence"/>
+		<property name="postContentConverter" ref="postContentConverter"/>
+		<property name="headerPopulator" ref="reqHeaderPopulator"/>
+	</bean>
+	
+	<!-- 
+	<bean id="nettyHttpClient" class="org.wispersd.commplatform.infra.http.client.NettyHttpClient" init-method="start" destroy-method="stop">
+		<property name="clientInitializer" ref="nettyHttpClientInitializer"/>
+		<property name="host" value="localhost"/>
+		<property name="port" value="8443"/>
+		<property name="getRequestConverter" ref="getRequestConverter"></property>
+		<property name="postRequestConverter" ref="postRequestConverter"></property>
+	</bean>
+	-->
+	
+	<bean id="nettyClientSslContextFactory" class="org.wispersd.commplatform.infra.http.client.NettyClientSslContextFactory">
+		<property name="useSsl" value="true"/>
+	</bean>
+	
+	<!--
+	<bean id="nettyHttpClientInitializer" class="org.wispersd.commplatform.infra.http.client.NettyHttpClientInitializer">
+		<constructor-arg index="0" ref="nettyClientSslContextFactory"/>
+	</bean>
+	-->
+</beans>

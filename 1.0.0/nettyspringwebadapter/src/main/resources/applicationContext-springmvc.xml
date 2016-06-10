@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="dispatcherServletBuilder" class="org.wispersd.commplatform.infra.http.server.adapter.DispatcherServletBuilder">
+		<property name="contextCfgLocation" value="sample-springmvc.xml"></property>
+	</bean>
+	<bean id="dispatcherServlet" factory-bean="dispatcherServletBuilder" factory-method="createDispatcherServlet"></bean>
+	
+	<alias name="springMVCRequestDispatcher" alias="defaultRequestDispatcher"/>
+	<bean id="springMVCRequestDispatcher" class="org.wispersd.commplatform.infra.http.server.adapter.SpringMVCRequestDispatcherImpl">
+		<property name="dispatcherServlet" ref="dispatcherServlet"></property>
+	</bean>
+</beans>	   
